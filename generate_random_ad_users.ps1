@@ -44,18 +44,16 @@ $Users = @(
 )
 
 
-$users | Foreach-Object {
-       $Prenom = $_.split(' ')[0]
-       $Nom = $_.split(' ')[1]
-       $ProfileName = $_[0]+$Nom
+New-ADOrganizationalUnit -Name "Users" -Path "DC=lab,DC=local"
 
 
 foreach ($User in $Users) {
 
-       $Firstname = User.split(' ')[0]
-       $Lastname = Usersplit(' ')[1]
-       $SAM = User[0]+$Nom
-       $Displayname = SAM
+       $Firstname = $User.split(' ')[0]
+       $Lastname = $User.split(' ')[1]
+       $SAM = $User[0]+$Nom
+       $Displayname = $SAM
+
        $OU = "OU=Users,DC=lab,DC=local"
        $UPN = $Displayname + "@lab.com"
        $generatedpass = -join ((97..122) | Get-Random -Count 10 | ForEach-Object {[char]$_})
