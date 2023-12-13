@@ -44,22 +44,17 @@ $Users = @(
 )
 
 
-New-ADOrganizationalUnit -Name "Users" -Path "DC=lab,DC=local"
-
-
 foreach ($User in $Users) {
 
        $Firstname = $User.split(' ')[0]
        $Lastname = $User.split(' ')[1]
-       $SAM = $User[0]+$Nom
+       $SAM = $User[0]+$Lastname
        $Displayname = $SAM
-
-       $OU = "OU=Users,DC=lab,DC=local"
        $UPN = $Displayname + "@lab.com"
-       $generatedpass = -join ((97..122) | Get-Random -Count 10 | ForEach-Object {[char]$_})
+       $generatedpass = -join ((97..122) | Get-Random -Count 20 | ForEach-Object {[char]$_})
        $Password = (ConvertTo-SecureString $generatedpass -AsPlainText -Force)
 
-       New-ADUser -Name "$Displayname" -DisplayName "$Displayname" -SamAccountName "$SAM" -UserPrincipalName "$UPN" -GivenName "$Firstname" -Surname "$Lastname" -AccountPassword $Password -Enabled $true -Path "$OU" -ChangePasswordAtLogon $false -PasswordNeverExpires $true
+       New-ADUser -Name "$Displayname" -DisplayName "$Displayname" -SamAccountName "$SAM" -UserPrincipalName "$UPN" -GivenName "$Firstname" -Surname "$Lastname" -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $false -PasswordNeverExpires $true
 
        Write-Host "Created user: $SAM"
 }
